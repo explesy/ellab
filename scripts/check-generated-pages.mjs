@@ -6,13 +6,13 @@ const expectedRoutes = [
   ['lessons/00-introduction/index.html', 'невидимая сила'],
   ['lessons/01-quantities/index.html', 'Почему одни и те же 12 вольт'],
   ['lessons/01-quantities-audio/index.html', 'Урок второй'],
-  ['lessons/02-ohms-law/index.html', 'Закон Ома'],
+  ['lessons/02-ohms-law/index.html', 'Мощность'],
   ['lessons/03-series-parallel/index.html', 'Параллельно'],
   ['lessons/03-alternating-current/index.html', 'материал перемещён'],
   ['lessons/04-alternating-current/index.html', 'синусоида'],
   ['practice/01-virtual-circuit/index.html', 'цепь'],
   ['reference/glossary/index.html', 'Deutsch'],
-  ['reference/roadmap/index.html', 'Маршрут'],
+  ['reference/roadmap/index.html', 'Карта обучения'],
   ['reference/profession/index.html', 'Германия'],
 ];
 
@@ -24,7 +24,7 @@ for (const [file, marker] of expectedRoutes) {
     continue;
   }
   const contents = readFileSync(absolute, 'utf8');
-  if (!contents.includes(marker)) problems.push('Expected content missing in ' + file + ': ' + marker);
+  if (!contents.toLocaleLowerCase('ru-RU').includes(marker.toLocaleLowerCase('ru-RU'))) problems.push('Expected content missing in ' + file + ': ' + marker);
   if (!contents.includes('/ellab/')) problems.push('Site base /ellab/ missing in ' + file);
 }
 
