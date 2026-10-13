@@ -1,0 +1,15 @@
+---
+interface Props { expression: string; label: string; detail?: string }
+const { expression, label, detail } = Astro.props;
+---
+<div class="not-content formula" role="group" aria-label={label}>
+  <div class="eyebrow">{label}</div>
+  <div class="expression">{expression}</div>
+  {detail && <div class="detail">{detail}</div>}
+</div>
+<style>
+.formula{background:var(--sl-color-bg-sidebar);border:1px solid var(--sl-color-hairline);border-radius:14px;padding:1rem 1.2rem;margin:1rem 0}
+.eyebrow{font-size:.76rem;font-weight:750;color:var(--sl-color-accent-high);letter-spacing:.03em;text-transform:uppercase}
+.expression{font:600 clamp(1.25rem,3vw,1.85rem)/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;margin:.35rem 0;word-break:break-word}
+.detail{font-size:.86rem;color:var(--sl-color-text)}
+</style>

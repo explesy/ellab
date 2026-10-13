@@ -1,0 +1,60 @@
+<section class="not-content graph-lab" data-ohm-graph>
+  <h3>График: от напряжения к току</h3>
+  <p>Наклон линии показывает: при большем сопротивлении тот же прирост напряжения создаёт меньший прирост тока.</p>
+  <div class="grid-input">
+    <label>R — сопротивление <output data-r-text>12 Ом</output>
+      <input type="range" data-r min="6" max="48" value="12" step="6" />
+    </label>
+    <label>U — точка на графике <output data-u-text>12 В</output>
+      <input type="range" data-u min="0" max="24" value="12" step="1" />
+    </label>
+  </div>
+  <svg viewBox="0 0 680 310" role="img" aria-label="График силы тока в зависимости от напряжения при фиксированном сопротивлении">
+    <g stroke="currentColor" stroke-width="1" opacity=".17">
+      <path d="M56 255 H652 M56 207 H652 M56 159 H652 M56 111 H652 M56 63 H652" />
+      <path d="M56 255 V55 M205 255 V55 M354 255 V55 M503 255 V55 M652 255 V55" />
+    </g>
+    <g stroke="currentColor" stroke-width="2" fill="none"><path d="M56 42 V255 H662" /></g>
+    <g fill="currentColor" font-size="16" font-family="system-ui">
+      <text x="10" y="23">I, А</text><text x="14" y="260">0</text><text x="11" y="164">2</text><text x="11" y="68">4</text>
+      <text x="49" y="280">0</text><text x="345" y="280">12</text><text x="632" y="280">24</text><text x="618" y="305">U, В</text>
+    </g>
+    <path data-line d="M56 255 L652 159" stroke="var(--sl-color-accent)" stroke-width="4" stroke-linecap="round" fill="none" />
+    <path data-guide d="M354 207 H56 M354 207 V255" stroke="var(--sl-color-accent)" stroke-width="1.7" opacity=".65" stroke-dasharray="5 5" fill="none"/>
+    <circle data-point cx="354" cy="207" r="8" fill="var(--sl-color-accent)" stroke="var(--sl-color-bg)" stroke-width="2" />
+  </svg>
+  <div class="output" aria-live="polite"><span>В выбранной точке</span><strong data-result>I = 12 В / 12 Ом = 1,00 А</strong></div>
+  <p class="hint">Модель идеального омического элемента: линия прямая, температура и сопротивление постоянны. Вертикальная шкала — 0–4 А.</p>
+</section>
+<script>
+  import { ohmsLaw } from '../lib/electricity.mjs';
+  document.querySelectorAll('[data-ohm-graph]').forEach(lab => {
+    const r = lab.querySelector('[data-r]');
+    const u = lab.querySelector('[data-u]');
+    if (!(r instanceof HTMLInputElement) || !(u instanceof HTMLInputElement)) return;
+    const update = () => {
+      const resistance=Number(r.value), voltage=Number(u.value);
+      const yEnd=255-48*ohmsLaw(24,resistance);
+      const xPoint=56+(596/24)*voltage;
+      const yPoint=255-48*ohmsLaw(voltage,resistance);
+      lab.querySelector('[data-line]').setAttribute('d','M56 255 L652 '+yEnd);
+      lab.querySelector('[data-guide]').setAttribute('d','M'+xPoint+' '+yPoint+' H56 M'+xPoint+' '+yPoint+' V255');
+      lab.querySelector('[data-point]').setAttribute('cx',String(xPoint));
+      lab.querySelector('[data-point]').setAttribute('cy',String(yPoint));
+      lab.querySelector('[data-r-text]').textContent=resistance+' Ом';
+      lab.querySelector('[data-u-text]').textContent=voltage+' В';
+      lab.querySelector('[data-result]').textContent='I = '+voltage+' В / '+resistance+' Ом = '+ohmsLaw(voltage,resistance).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2})+' А';
+    };
+    r.addEventListener('input',update);u.addEventListener('input',update);update();
+  });
+</script>
+<style>
+.graph-lab{background:var(--sl-color-bg-sidebar);border:1px solid var(--sl-color-hairline);border-radius:16px;padding:1.1rem;margin:1.25rem 0}
+h3{margin:0;font-size:1.13rem}p{font-size:.92rem;line-height:1.55;margin:.4rem 0 1rem}
+.grid-input{display:grid;gap:.9rem}label{display:grid;gap:.2rem;font-size:.92rem;font-weight:650}
+output{float:right;color:var(--sl-color-accent-high)}input{width:100%;accent-color:var(--sl-color-accent)}
+svg{display:block;width:100%;height:auto;margin:.5rem 0}
+.output{background:var(--sl-color-bg);border-radius:12px;padding:.7rem .9rem;display:grid;gap:.3rem}
+.output span{font-size:.79rem;color:var(--sl-color-text)}.output strong{font-size:1.1rem}
+.hint{font-size:.78rem;color:var(--sl-color-text);margin:.65rem 0 0}
+</style>
