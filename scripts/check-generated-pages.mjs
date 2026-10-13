@@ -7,7 +7,9 @@ const expectedRoutes = [
   ['lessons/01-quantities/index.html', 'Почему одни и те же 12 вольт'],
   ['lessons/01-quantities-audio/index.html', 'Урок второй'],
   ['lessons/02-ohms-law/index.html', 'Закон Ома'],
-  ['lessons/03-alternating-current/index.html', 'синусоида'],
+  ['lessons/03-series-parallel/index.html', 'Параллельно'],
+  ['lessons/03-alternating-current/index.html', 'материал перемещён'],
+  ['lessons/04-alternating-current/index.html', 'синусоида'],
   ['practice/01-virtual-circuit/index.html', 'цепь'],
   ['reference/glossary/index.html', 'Deutsch'],
   ['reference/roadmap/index.html', 'Маршрут'],
@@ -31,5 +33,5 @@ if (problems.length) {
   for (const problem of problems) console.error('- ' + problem);
   process.exitCode = 1;
 } else {
-  console.log('Generated website validated: ' + expectedRoutes.length + ' routes including both lesson 2 versions.');
+  console.log('Generated website validated: ' + expectedRoutes.length + ' routes, correct order, and the lesson 2 audio.');
 }

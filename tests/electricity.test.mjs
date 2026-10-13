@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ohmsLaw, resistorPower, acPeak, acPeriodMs, sineVoltage } from '../src/lib/electricity.mjs';
+import { ohmsLaw, resistorPower, acPeak, acPeriodMs, sineVoltage, twoResistorCircuit } from '../src/lib/electricity.mjs';
 
 test('Ohm: 12 V on 6 ohms = 2 A and 24 W', () => {
   assert.equal(ohmsLaw(12, 6), 2);
@@ -32,4 +32,16 @@ test('Lesson 2 examples: 12 V / 24 Ω = 0.5 A and 6 W', () => {
 test('At fixed voltage doubling resistance halves current', () => {
   assert.equal(ohmsLaw(9, 18), 0.5);
   assert.equal(ohmsLaw(9, 36), 0.25);
+});
+
+test('Two identical resistors in series split voltage and share current', () => {
+  assert.deepEqual(twoResistorCircuit(12, 6, 'series'), {
+    equivalentResistance: 12, sourceCurrent: 1, eachVoltage: 6, eachCurrent: 1,
+  });
+});
+test('Parallel resistors share voltage and divide source current', () => {
+  assert.deepEqual(twoResistorCircuit(12, 6, 'parallel'), {
+    equivalentResistance: 3, sourceCurrent: 4, eachVoltage: 12, eachCurrent: 2,
+  });
+  assert.throws(() => twoResistorCircuit(12, 6, 'not-a-type'), RangeError);
 });

@@ -1,0 +1,54 @@
+:root {
+  --sl-content-width: 53rem;
+  --sl-text-base: 1rem;
+  --ellab-round: 1rem;
+}
+:root[data-theme='light'] {
+  --sl-color-accent-low: #dbf2f1;
+  --sl-color-accent: #066c76;
+  --sl-color-accent-high: #084f59;
+}
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #073942;
+  --sl-color-accent: #7bded7;
+  --sl-color-accent-high: #baf3ed;
+}
+.sl-markdown-content {
+  line-height: 1.75;
+}
+.sl-markdown-content > p,
+.sl-markdown-content > ul,
+.sl-markdown-content > ol {
+  max-width: 76ch;
+}
+.sl-markdown-content h2:not(:first-child) {
+  margin-block-start: 2.35rem;
+  padding-block-start: 1.2rem;
+  border-top: 1px solid var(--sl-color-hairline);
+}
+.sl-markdown-content h3 {
+  line-height: 1.3;
+}
+.sl-markdown-content strong {
+  font-weight: 700;
+}
+.sl-markdown-content :is(blockquote, aside) {
+  border-radius: .7rem;
+}
+.sl-markdown-content :is(pre, table) {
+  border-radius: .65rem;
+}
+.sl-markdown-content :is(input[type="range"], select, button):focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--sl-color-accent);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sl-markdown-content *,
+  .sl-markdown-content *::before,
+  .sl-markdown-content *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

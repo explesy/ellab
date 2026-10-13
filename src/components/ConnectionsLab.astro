@@ -1,0 +1,83 @@
+<section class="not-content connections-lab" data-connections-lab aria-label="Модель двух резисторов">
+  <h3>Два резистора: эксперимент</h3>
+  <p>Выбери тип соединения. Сначала предположи, что будет с током, затем сравни значения.</p>
+  <div class="inputs">
+    <label>Схема соединения
+      <select data-mode>
+        <option value="series">Последовательно</option>
+        <option value="parallel">Параллельно</option>
+      </select>
+    </label>
+    <label>Напряжение источника <output data-u-value>12 В</output>
+      <input data-u type="range" min="3" max="24" step="1" value="12" />
+    </label>
+    <label>Сопротивление каждого резистора <output data-r-value>6 Ω</output>
+      <input data-r type="range" min="2" max="24" step="1" value="6" />
+    </label>
+  </div>
+  <svg viewBox="0 0 600 240" role="img" aria-label="Учебная схема источника и двух резисторов; переключатель меняет соединение">
+    <title>Омические резисторы и источник постоянного напряжения</title>
+    <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M70 80 V118 M70 143 V190 H460" />
+      <path d="M36 119 H104 M47 142 H93" />
+    </g>
+    <g data-series fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M70 80 H205 M260 80 H355 M410 80 H460 V190" />
+      <rect x="205" y="68" width="55" height="24" rx="4" fill="var(--sl-color-bg)" />
+      <rect x="355" y="68" width="55" height="24" rx="4" fill="var(--sl-color-bg)" />
+    </g>
+    <g data-series-label font-size="15" fill="currentColor"><text x="220" y="58">R₁</text><text x="370" y="58">R₂</text></g>
+    <g data-parallel fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+      <path d="M70 80 H400 M200 80 V108 M200 150 V190 M400 80 V108 M400 150 V190"/>
+      <rect x="187" y="108" width="26" height="42" rx="4" fill="var(--sl-color-bg)" />
+      <rect x="387" y="108" width="26" height="42" rx="4" fill="var(--sl-color-bg)" />
+    </g>
+    <g data-parallel-label fill="currentColor" font-size="15" style="display:none"><text x="213" y="136">R₁</text><text x="413" y="136">R₂</text></g>
+    <g fill="var(--sl-color-accent-high)" font-size="19" font-weight="700"><text x="17" y="120">+</text><text x="17" y="148">−</text></g>
+    <text x="70" y="225" font-size="15" fill="currentColor">Источник постоянного напряжения (идеальная модель)</text>
+  </svg>
+  <div class="results" aria-live="polite">
+    <div><span>Общее сопротивление</span><strong data-rt>12 Ω</strong></div>
+    <div><span>Ток источника</span><strong data-it>1,00 А</strong></div>
+    <div><span>Напряжение на каждом резисторе</span><strong data-ur>6 В</strong></div>
+    <div><span>Ток через каждый резистор</span><strong data-ir>1,00 А</strong></div>
+  </div>
+  <p class="note">Только учебная модель двух одинаковых омических резисторов. Реальный источник имеет ограничения по максимальному току; не собирать расчётные режимы на батарейках без защищённого учебного оборудования.</p>
+</section>
+<script>
+  import { twoResistorCircuit } from '../lib/electricity.mjs';
+  document.querySelectorAll('[data-connections-lab]').forEach(lab => {
+    const mode=lab.querySelector('[data-mode]');
+    const u=lab.querySelector('[data-u]');
+    const r=lab.querySelector('[data-r]');
+    if (!(mode instanceof HTMLSelectElement)||!(u instanceof HTMLInputElement)||!(r instanceof HTMLInputElement)) return;
+    const num=n=>n.toLocaleString('ru-RU',{maximumFractionDigits:2,minimumFractionDigits:2});
+    const update=()=>{
+      const series=mode.value==='series';
+      const U=Number(u.value), R=Number(r.value);
+      const { equivalentResistance:Rt, sourceCurrent:It, eachVoltage, eachCurrent } = twoResistorCircuit(U,R,mode.value);
+      lab.querySelector('[data-u-value]').textContent=U+' В';
+      lab.querySelector('[data-r-value]').textContent=R+' Ω';
+      lab.querySelector('[data-rt]').textContent=num(Rt)+' Ω';
+      lab.querySelector('[data-it]').textContent=num(It)+' А';
+      lab.querySelector('[data-ur]').textContent=num(eachVoltage)+' В';
+      lab.querySelector('[data-ir]').textContent=num(eachCurrent)+' А';
+      for(const sel of ['[data-series]','[data-series-label]'])lab.querySelector(sel).style.display=series?'':'none';
+      for(const sel of ['[data-parallel]','[data-parallel-label]'])lab.querySelector(sel).style.display=series?'none':'';
+    };
+    mode.addEventListener('change',update);u.addEventListener('input',update);r.addEventListener('input',update);update();
+  });
+</script>
+<style>
+.connections-lab{background:var(--sl-color-bg-sidebar);border:1px solid var(--sl-color-hairline);padding:1.2rem;border-radius:16px;margin:1.2rem 0}
+h3{font-size:1.2rem;margin:0 0 .5rem}p{margin:.35rem 0 1rem}
+.inputs{display:grid;gap:.8rem}label{display:grid;gap:.3rem;font-size:.93rem;font-weight:650}
+output{color:var(--sl-color-accent-high)}select,input{width:100%;accent-color:var(--sl-color-accent)}
+select{padding:.55rem;color:var(--sl-color-text);background:var(--sl-color-bg);border:1px solid var(--sl-color-hairline);border-radius:8px}
+svg{display:block;width:100%;height:auto;max-height:240px;margin:.8rem 0}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+.results div{background:var(--sl-color-bg);padding:.75rem;border-radius:10px;display:grid;gap:.3rem}
+.results span{font-size:.78rem}.results strong{font-size:1.12rem;font-variant-numeric:tabular-nums}
+.note{margin:.7rem 0 0;font-size:.78rem;color:var(--sl-color-text)}
+@media(max-width:520px){.results{grid-template-columns:1fr}}
+</style>
