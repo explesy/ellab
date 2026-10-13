@@ -1,0 +1,58 @@
+<section class="not-content ellab-lab" data-ohm-lab aria-label="Интерактивный закон Ома">
+  <h3>Виртуальная лаборатория: закон Ома</h3>
+  <p>Как изменится ток, если увеличить напряжение или сопротивление?</p>
+  <div class="controls">
+    <label>Напряжение U <output data-voltage-label>12 В</output>
+      <input data-voltage type="range" min="0" max="24" step="1" value="12" />
+    </label>
+    <label>Сопротивление R <output data-resistance-label>12 Ом</output>
+      <input data-resistance type="range" min="1" max="120" step="1" value="12" />
+    </label>
+  </div>
+  <div class="values" aria-live="polite">
+    <div><span>Ток, I = U / R</span><strong data-current>1,000 А</strong></div>
+    <div><span>Мощность, P = U × I</span><strong data-power>12,00 Вт</strong></div>
+  </div>
+  <div class="meter">
+    <span>Индикатор тока (условная шкала 0–24 А)</span>
+    <div class="track"><div class="fill" data-bar style="width:4.1667%"></div></div>
+  </div>
+  <p class="note">Идеальная модель омического резистора с постоянным сопротивлением. Это не руководство по сборке или выбору защитного оборудования.</p>
+</section>
+<script>
+  import { ohmsLaw, resistorPower } from '../lib/electricity.mjs';
+  document.querySelectorAll('[data-ohm-lab]').forEach((lab) => {
+    const u = lab.querySelector('[data-voltage]');
+    const r = lab.querySelector('[data-resistance]');
+    if (!(u instanceof HTMLInputElement) || !(r instanceof HTMLInputElement)) return;
+    const format = (x, digits) => x.toLocaleString('ru-RU', {minimumFractionDigits:digits, maximumFractionDigits:digits});
+    const update = () => {
+      const voltage = Number(u.value);
+      const resistance = Number(r.value);
+      const current = ohmsLaw(voltage, resistance);
+      const power = resistorPower(voltage, resistance);
+      lab.querySelector('[data-voltage-label]').textContent = voltage + ' В';
+      lab.querySelector('[data-resistance-label]').textContent = resistance + ' Ом';
+      lab.querySelector('[data-current]').textContent = format(current,3) + ' А';
+      lab.querySelector('[data-power]').textContent = format(power,2) + ' Вт';
+      lab.querySelector('[data-bar]').style.width = Math.min(100, current / 24 * 100) + '%';
+    };
+    u.addEventListener('input', update);
+    r.addEventListener('input', update);
+    update();
+  });
+</script>
+<style>
+  .ellab-lab{border:1px solid var(--sl-color-hairline);border-radius:16px;padding:1.3rem;background:var(--sl-color-bg-sidebar);margin:1.5rem 0}
+  h3{font-size:1.18rem;margin:0 0 .4rem}p{margin:.3rem 0 1rem;color:var(--sl-color-text)}
+  .controls{display:grid;gap:1rem}label{display:grid;gap:.35rem;font-weight:650}
+  output{float:right;color:var(--sl-color-accent-high)}input{width:100%;accent-color:var(--sl-color-accent)}
+  .values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin-top:1rem}
+  .values div{border-radius:12px;background:var(--sl-color-bg);padding:.85rem;display:grid;gap:.3rem}
+  .values span{font-size:.82rem;color:var(--sl-color-text)}.values strong{font-size:1.45rem;font-variant-numeric:tabular-nums}
+  .meter{margin-top:.95rem}.meter span{display:block;font-size:.78rem;margin-bottom:.35rem}
+  .track{height:12px;background:var(--sl-color-gray-5);overflow:hidden;border-radius:100px}
+  .fill{height:100%;background:var(--sl-color-accent);border-radius:100px;transition:width .08s}
+  p.note{font-size:.78rem;margin:.8rem 0 0;color:var(--sl-color-text)}
+  @media(max-width:480px){.values{grid-template-columns:1fr}}
+</style>

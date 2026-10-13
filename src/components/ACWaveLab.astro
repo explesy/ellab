@@ -1,0 +1,67 @@
+<section class="not-content ellab-lab" data-ac-lab aria-label="Интерактивный график переменного напряжения">
+  <h3>Виртуальный осциллограф: переменное напряжение</h3>
+  <p>Меняй частоту и действующее напряжение. На оси времени — 40 миллисекунд.</p>
+  <div class="controls">
+    <label>Частота f <output data-frequency-label>50 Гц</output>
+      <input data-frequency type="range" min="10" max="100" step="5" value="50" />
+    </label>
+    <label>Действующее напряжение Uₑфф <output data-rms-label>230 В</output>
+      <input data-rms type="range" min="10" max="230" step="10" value="230" />
+    </label>
+  </div>
+  <svg data-graph viewBox="0 0 640 260" role="img" aria-label="Синусоида напряжения в течение 40 миллисекунд" preserveAspectRatio="xMidYMid meet">
+    <g stroke="currentColor" opacity=".16" stroke-width="1">
+      <path d="M45 25V215 M185 25V215 M325 25V215 M465 25V215 M605 25V215 M45 120H605 M45 25H605 M45 215H605" />
+    </g>
+    <path data-wave d="" fill="none" stroke="var(--sl-color-accent)" stroke-width="3" stroke-linecap="round" />
+    <g fill="currentColor" font-size="13">
+      <text x="9" y="34">+U</text><text x="22" y="124">0</text><text x="9" y="215">−U</text>
+      <text x="45" y="243">0</text><text x="172" y="243">10</text><text x="312" y="243">20</text><text x="452" y="243">30</text><text x="581" y="243">40 мс</text>
+    </g>
+  </svg>
+  <div class="values" aria-live="polite">
+    <div><span>Период T = 1 / f</span><strong data-period>20,0 мс</strong></div>
+    <div><span>Амплитуда Uₘₐₓ = √2 × Uₑфф</span><strong data-peak>325,3 В</strong></div>
+  </div>
+  <p class="note">Для 50 Гц: 50 полных циклов и 100 смен знака напряжения за секунду. 230 В — действующее, а не максимальное значение. Синусоида здесь идеализирована.</p>
+</section>
+<script>
+  import { acPeriodMs, acPeak, sineVoltage } from '../lib/electricity.mjs';
+  document.querySelectorAll('[data-ac-lab]').forEach((lab) => {
+    const f = lab.querySelector('[data-frequency]');
+    const rmsInput = lab.querySelector('[data-rms]');
+    if (!(f instanceof HTMLInputElement) || !(rmsInput instanceof HTMLInputElement)) return;
+    const update = () => {
+      const freq = Number(f.value);
+      const rms = Number(rmsInput.value);
+      const peak = acPeak(rms);
+      const d = [];
+      for (let j=0;j<=320;j++) {
+        const t = 0.04 * j / 320;
+        const x = 45 + 560 * j / 320;
+        const y = 120 - 91 * sineVoltage(t,rms,freq) / acPeak(230);
+        d.push((j===0 ? 'M' : 'L') + x.toFixed(2) + ',' + y.toFixed(2));
+      }
+      lab.querySelector('[data-wave]').setAttribute('d', d.join(' '));
+      lab.querySelector('[data-frequency-label]').textContent = freq + ' Гц';
+      lab.querySelector('[data-rms-label]').textContent = rms + ' В';
+      lab.querySelector('[data-period]').textContent = acPeriodMs(freq).toLocaleString('ru-RU',{maximumFractionDigits:1}) + ' мс';
+      lab.querySelector('[data-peak]').textContent = peak.toLocaleString('ru-RU',{maximumFractionDigits:1}) + ' В';
+    };
+    f.addEventListener('input',update);
+    rmsInput.addEventListener('input',update);
+    update();
+  });
+</script>
+<style>
+  .ellab-lab{border:1px solid var(--sl-color-hairline);border-radius:16px;padding:1.3rem;background:var(--sl-color-bg-sidebar);margin:1.5rem 0}
+  h3{font-size:1.18rem;margin:0 0 .4rem}p{margin:.3rem 0 1rem;color:var(--sl-color-text)}
+  .controls{display:grid;gap:1rem}label{display:grid;gap:.35rem;font-weight:650}
+  output{float:right;color:var(--sl-color-accent-high)}input{width:100%;accent-color:var(--sl-color-accent)}
+  svg{display:block;width:100%;margin:1rem 0 .4rem}
+  .values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
+  .values div{border-radius:12px;background:var(--sl-color-bg);padding:.85rem;display:grid;gap:.3rem}
+  .values span{font-size:.82rem;color:var(--sl-color-text)}.values strong{font-size:1.4rem;font-variant-numeric:tabular-nums}
+  p.note{font-size:.78rem;margin:.8rem 0 0;color:var(--sl-color-text)}
+  @media(max-width:480px){.values{grid-template-columns:1fr}}
+</style>
