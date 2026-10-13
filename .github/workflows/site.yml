@@ -22,6 +22,8 @@ jobs:
         run: npm test
       - name: Build site
         run: npm run build
+      - name: Verify generated lessons
+        run: node scripts/check-generated-pages.mjs
       - name: Upload generated site
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
