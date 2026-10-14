@@ -29,6 +29,24 @@ test('Lesson 2 examples: 12 V / 24 Ω = 0.5 A and 6 W', () => {
   assert.equal(resistorPower(12, 48), 3);
   assert.equal(resistorPower(24, 24), 24);
 });
+test('Lesson 3 task: 2.2 kW heater at 230 V', () => {
+  const current = 2200 / 230;
+  assert.ok(Math.abs(ohmsLaw(230, 230 * 230 / 2200) - current) < 1e-9);
+  assert.ok(Math.abs(current * current * (230 * 230 / 2200) - 2200) < 1e-6);
+});
+test('Lesson 4 task: 4 Ω ∥ 12 Ω on 12 V gives 4 A total and 48 W', () => {
+  assert.equal(ohmsLaw(12, 4), 3);
+  assert.equal(ohmsLaw(12, 12), 1);
+  assert.ok(Math.abs(1 / (1 / 4 + 1 / 12) - 3) < 1e-9);
+  assert.equal(resistorPower(12, 3), 48);
+});
+test('Lesson 5 task: 46 Ω heater at 230 V RMS = 5 A, 1150 W, peak 325 V, peak current 7.07 A', () => {
+  assert.equal(ohmsLaw(230, 46), 5);
+  assert.equal(resistorPower(230, 46), 1150);
+  assert.ok(Math.abs(acPeak(230) - 325.27) < 0.01);
+  assert.ok(Math.abs(acPeak(5) - 7.07) < 0.01);
+});
+
 test('At fixed voltage doubling resistance halves current', () => {
   assert.equal(ohmsLaw(9, 18), 0.5);
   assert.equal(ohmsLaw(9, 36), 0.25);
