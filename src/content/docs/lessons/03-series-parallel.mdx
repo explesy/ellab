@@ -5,6 +5,7 @@ description: 'Почему лампы в квартире подключают �
 
 import ConnectionsLab from '../../../components/ConnectionsLab.astro';
 import FormulaCard from '../../../components/FormulaCard.astro';
+import InlineMath from '../../../components/InlineMath.astro';
 
 # Урок 4. Что изменится, если подключить вторую лампу?
 
@@ -20,9 +21,9 @@ import FormulaCard from '../../../components/FormulaCard.astro';
 
 Для источника **12 В** и двух одинаковых резисторов по **6 Ом**:
 
-- Общее сопротивление: 6 + 6 = **12 Ом**.
-- Ток: 12/12 = **1 А**.
-- Напряжение на каждом: 1 × 6 = **6 В**.
+- Общее сопротивление: <InlineMath expression="6+6=12\,\Omega" />.
+- Ток: <InlineMath expression="\frac{12}{12}=1\,\text{А}" />.
+- Напряжение на каждом: <InlineMath expression="1\cdot6=6\,\text{В}" />.
 
 Если один элемент разомкнуть, общий путь прервётся и ток прекратится **во всей последовательной цепи**.
 
@@ -35,9 +36,9 @@ import FormulaCard from '../../../components/FormulaCard.astro';
 Для той же батареи **12 В** и двух резисторов по **6 Ом**:
 
 - На каждом резисторе **12 В**.
-- Через каждый: 12/6 = **2 А**.
-- Общий ток источника: 2 + 2 = **4 А**.
-- Эквивалентное сопротивление: 12/4 = **3 Ом**.
+- Через каждый: <InlineMath expression="\frac{12}{6}=2\,\text{А}" />.
+- Общий ток источника: <InlineMath expression="2+2=4\,\text{А}" />.
+- Эквивалентное сопротивление: <InlineMath expression="\frac{12}{4}=3\,\Omega" />.
 
 **Важный вывод:** если добавить параллельную ветвь к идеальному источнику с неизменным напряжением, общий ток увеличивается. Это показывает, почему наличие нескольких потребителей имеет значение для нагрузки на источник и линии питания.
 
@@ -72,10 +73,10 @@ import FormulaCard from '../../../components/FormulaCard.astro';
 **Решение.**
 
 1. На каждом резисторе напряжение 12 В.
-2. `I₁ = 12 / 4 = 3 А`, `I₂ = 12 / 12 = 1 А`.
-3. `Iобщ = 3 + 1 = 4 А`.
-4. `Rэкв = 12 / 4 = 3 Ом`. Проверка: `1/Rэкв = 1/4 + 1/12 = 4/12`, значит `Rэкв = 3 Ом`.
-5. `P = U × Iобщ = 12 × 4 = 48 Вт`. Проверка: сумма мощностей ветвей `12 × 3 + 12 × 1 = 48 Вт`.
+2. <InlineMath expression="I_1=\frac{12}{4}=3\,\text{А}" />, <InlineMath expression="I_2=\frac{12}{12}=1\,\text{А}" />.
+3. <InlineMath expression="I_{\text{общ}}=3+1=4\,\text{А}" />.
+4. <InlineMath expression="R_{\text{экв}}=\frac{12}{4}=3\,\Omega" />. Проверка: <InlineMath expression="\frac{1}{R_{\text{экв}}}=\frac14+\frac1{12}=\frac4{12}" />, значит <InlineMath expression="R_{\text{экв}}=3\,\Omega" />.
+5. <InlineMath expression="P=U I_{\text{общ}}=12\cdot4=48\,\text{Вт}" />. Проверка: сумма мощностей ветвей <InlineMath expression="12\cdot3+12\cdot1=48\,\text{Вт}" />.
 
 ## 7. Проверь себя
 
@@ -87,8 +88,8 @@ import FormulaCard from '../../../components/FormulaCard.astro';
 <details>
 <summary>Ответы</summary>
 
-1. 4 + 8 = 12 Ω; `I = 12/12 = 1` А, одинаковый в обоих резисторах.
-2. `I₁ = 12/4 = 3` А, `I₂ = 12/8 = 1,5` А, суммарно **4,5 А**.
+1. <InlineMath expression="4+8=12\,\Omega" />; <InlineMath expression="I=\frac{12}{12}=1" /> А, одинаковый в обоих резисторах.
+2. <InlineMath expression="I_1=\frac{12}{4}=3" /> А, <InlineMath expression="I_2=\frac{12}{8}=1{,}5" /> А, суммарно **4,5 А**.
 3. У каждой ветви свой непрерывный путь между выводами источника.
 4. Последовательное соединение: общий ток; параллельное: общее напряжение.
 

@@ -1,0 +1,17 @@
+---
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+
+interface Props { expression: string }
+const { expression } = Astro.props;
+const renderedExpression = katex.renderToString(expression, {
+  displayMode: false,
+  output: 'htmlAndMathml',
+  throwOnError: true,
+});
+---
+<span class="not-content ellab-inline-math" set:html={renderedExpression} />
+<style>
+.ellab-inline-math{display:inline;white-space:nowrap;color:inherit;vertical-align:baseline}
+.ellab-inline-math :global(.katex){font-size:1em;line-height:1.2}
+</style>

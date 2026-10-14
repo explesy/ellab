@@ -40,6 +40,16 @@ if (existsSync(formulaPagePath)) {
   }
 }
 
+// Formulas in paragraphs must be pre-rendered rather than displayed as code.
+for (const slug of ['01-quantities', '02-ohms-law', '03-series-parallel', '04-alternating-current']) {
+  const pagePath = join(process.cwd(), 'dist', 'lessons', slug, 'index.html');
+  if (!existsSync(pagePath)) continue; // the route checker reports missing files
+  const page = readFileSync(pagePath, 'utf8');
+  if (!page.includes('ellab-inline-math') || !page.includes('katex-mathml')) {
+    problems.push('Inline KaTeX/MathML missing from lesson ' + slug);
+  }
+}
+
 // The rendered sidebar must follow the order declared in astro.config.mjs.
 const configSource = readFileSync(join(process.cwd(), 'astro.config.mjs'), 'utf8');
 const configuredSidebarSlugs = [...configSource.matchAll(/slug:\s*'([^']+)'/g)].map((match) => match[1]);
