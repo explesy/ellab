@@ -31,6 +31,15 @@ for (const [file, marker] of expectedRoutes) {
   if (!contents.includes('/ellab/')) problems.push('Site base /ellab/ missing in ' + file);
 }
 
+// KaTeX is pre-rendered into the actual lesson HTML, including a stacked fraction.
+const formulaPagePath = join(process.cwd(), 'dist', 'lessons/01-quantities/index.html');
+if (existsSync(formulaPagePath)) {
+  const formulaPage = readFileSync(formulaPagePath, 'utf8');
+  if (!formulaPage.includes('katex-mathml') || !formulaPage.includes('<mfrac>')) {
+    problems.push('KaTeX/MathML stacked fraction missing from lesson 2');
+  }
+}
+
 // The rendered sidebar must follow the order declared in astro.config.mjs.
 const configSource = readFileSync(join(process.cwd(), 'astro.config.mjs'), 'utf8');
 const configuredSidebarSlugs = [...configSource.matchAll(/slug:\s*'([^']+)'/g)].map((match) => match[1]);
