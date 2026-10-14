@@ -96,6 +96,7 @@ node scripts/check-generated-pages.mjs   # проверка собранного
 
 - Лаборатории — Astro-компоненты с `<script>`. Формулы импортировать из `src/lib/electricity.mjs`, не дублировать.
 - Ползунки имеют видимую подпись и `aria-live` для результата.
+- Формулы в `FormulaCard` писать на LaTeX (например, `I_{\text{ср}} = \dfrac{\Delta Q}{\Delta t}`). KaTeX рендерит их в HTML + MathML при сборке; новая формула должна проходить `tests/formula-rendering.test.mjs`.
 - Новые лаборатории: `src/components/*.astro`, подключать в MDX через `import`.
 - Не менять `dist/`, `node_modules/`, `.astro/` вручную.
 
