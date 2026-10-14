@@ -35,7 +35,7 @@ for (const [file, marker] of expectedRoutes) {
 const formulaPagePath = join(process.cwd(), 'dist', 'lessons/01-quantities/index.html');
 if (existsSync(formulaPagePath)) {
   const formulaPage = readFileSync(formulaPagePath, 'utf8');
-  if (!formulaPage.includes('metal-lattice-caption') || !formulaPage.includes('Расшифруем каждую букву')) {
+  if (!formulaPage.includes('metal-lattice-caption') || !formulaPage.toLocaleLowerCase('ru-RU').includes('расшифруем каждую букву')) {
     problems.push('Metal lattice explanation and readable Ohm law breakdown missing from lesson 2');
   }
   if (!formulaPage.includes('katex-mathml') || !formulaPage.includes('<mfrac>')) {
