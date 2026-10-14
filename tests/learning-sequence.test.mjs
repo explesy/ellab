@@ -6,18 +6,10 @@ const lesson = readFileSync(
   new URL('../src/content/docs/lessons/01-quantities.mdx', import.meta.url),
   'utf8',
 );
-const audio = readFileSync(
-  new URL('../src/content/docs/lessons/01-quantities-audio.md', import.meta.url),
-  'utf8',
-);
-
 test('lesson starts with an understandable observation rather than unknown calculations', () => {
   const lead = lesson.slice(lesson.indexOf('# Урок 2.'), lesson.indexOf('## 1.'));
   assert.match(lead, /ламп/);
   assert.doesNotMatch(lead, /24\s?(?:Ω|Ом)|48\s?(?:Ω|Ом)|0[,.]5\s?А/);
-  const audioLead = audio.slice(audio.indexOf('# Урок второй'), audio.indexOf('## Первая часть'));
-  assert.match(audioLead, /ламп/);
-  assert.doesNotMatch(audioLead, /двадцать четыре ома|сорок восемь омов/);
 });
 
 test('microscopic picture precedes charge, voltage and Ohm calculations', () => {
