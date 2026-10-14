@@ -28,6 +28,17 @@ for (const [file, marker] of expectedRoutes) {
   if (!contents.includes('/ellab/')) problems.push('Site base /ellab/ missing in ' + file);
 }
 
+// Every lesson should render desktop controls even when navigation is collapsed.
+const lessonHtml = join(process.cwd(), 'dist', 'lessons/01-quantities/index.html');
+if (existsSync(lessonHtml)) {
+  const html = readFileSync(lessonHtml, 'utf8');
+  for (const side of ['left', 'right']) {
+    if (!html.includes('data-ellab-toggle="' + side + '"')) {
+      problems.push('Missing desktop panel control: ' + side);
+    }
+  }
+}
+
 if (problems.length) {
   console.error('Published website validation FAILED:');
   for (const problem of problems) console.error('- ' + problem);

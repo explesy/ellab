@@ -12,6 +12,7 @@ export default defineConfig({
         root: { label: 'Русский', lang: 'ru' },
       },
       customCss: ['./src/styles/ellab.css'],
+      components: { Header: './src/components/EllabHeader.astro' },
       sidebar: [
         {
           label: 'Учебный маршрут',

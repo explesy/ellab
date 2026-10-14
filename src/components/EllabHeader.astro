@@ -1,0 +1,92 @@
+---
+import StarlightHeader from '@astrojs/starlight/components/Header.astro';
+---
+
+<StarlightHeader />
+
+<div class="ellab-panel-controls" role="group" aria-label="Боковые панели учебника">
+  <button
+    type="button"
+    class="ellab-panel-button ellab-panel-button--left"
+    data-ellab-toggle="left"
+    aria-label="Скрыть меню уроков"
+    title="Скрыть меню уроков"
+    aria-controls="starlight__sidebar"
+    aria-pressed="false"
+  ><span aria-hidden="true" data-ellab-chevron>‹</span></button>
+  <button
+    type="button"
+    class="ellab-panel-button ellab-panel-button--right"
+    data-ellab-toggle="right"
+    aria-label="Скрыть оглавление"
+    title="Скрыть оглавление"
+    aria-pressed="false"
+  ><span aria-hidden="true" data-ellab-chevron>›</span></button>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const toggles = document.querySelectorAll<HTMLButtonElement>('[data-ellab-toggle]');
+
+  type Panel = 'left' | 'right';
+  const storageKey = (panel: Panel) => 'ellab:panel:' + panel;
+
+  const readState = (panel: Panel): 'open' | 'closed' => {
+    try {
+      return localStorage.getItem(storageKey(panel)) === 'closed' ? 'closed' : 'open';
+    } catch {
+      return 'open';
+    }
+  };
+
+  const writeState = (panel: Panel, value: 'open' | 'closed') => {
+    try {
+      localStorage.setItem(storageKey(panel), value);
+    } catch {
+      // Private browsing or blocked storage: the toggle still works on this page.
+    }
+  };
+
+  const applyState = (panel: Panel, state: 'open' | 'closed') => {
+    const closed = state === 'closed';
+    const button = document.querySelector<HTMLButtonElement>('[data-ellab-toggle="' + panel + '"]');
+    if (!button) return;
+
+    if (panel === 'left') root.dataset.ellabLeft = state;
+    else root.dataset.ellabRight = state;
+
+    const shownName = panel === 'left' ? 'меню уроков' : 'оглавление';
+    const label = (closed ? 'Показать ' : 'Скрыть ') + shownName;
+    button.setAttribute('aria-label', label);
+    button.setAttribute('title', label);
+    button.setAttribute('aria-pressed', String(closed));
+
+    const icon = button.querySelector('[data-ellab-chevron]');
+    if (icon) icon.textContent = panel === 'left' ? (closed ? '›' : '‹') : (closed ? '‹' : '›');
+  };
+
+  if (root.hasAttribute('data-has-sidebar')) {
+    const sidebar = document.querySelector('.sidebar-pane');
+    if (sidebar && !sidebar.id) sidebar.id = 'starlight__sidebar';
+    const toc = document.querySelector('.right-sidebar-container');
+    if (toc) toc.id = 'ellab-toc-sidebar';
+
+    toggles.forEach((button) => {
+      const panel = button.dataset.ellabToggle as Panel;
+      if (panel === 'right') {
+        button.setAttribute('aria-controls', 'ellab-toc-sidebar');
+        if (!toc) {
+          button.hidden = true;
+          return;
+        }
+      }
+      applyState(panel, readState(panel));
+      button.addEventListener('click', () => {
+        const current = panel === 'left' ? root.dataset.ellabLeft : root.dataset.ellabRight;
+        const next = current === 'closed' ? 'open' : 'closed';
+        applyState(panel, next);
+        writeState(panel, next);
+      });
+    });
+  }
+</script>

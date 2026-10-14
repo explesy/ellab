@@ -52,3 +52,89 @@ a:focus-visible {
     animation-duration: 0.01ms !important;
   }
 }
+
+
+/* Desktop reading mode: two independent, persistent sidebar toggles.
+   Starlight's built-in mobile menu and mobile TOC remain untouched. */
+.ellab-panel-controls {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--sl-z-index-menu, 50) - 1);
+  pointer-events: none;
+}
+.ellab-panel-button {
+  position: fixed;
+  top: calc(var(--sl-nav-height) + 0.65rem);
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 0.7rem;
+  border: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-bg-sidebar);
+  color: var(--sl-color-text);
+  box-shadow: 0 2px 9px rgb(0 0 0 / 0.08);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  pointer-events: auto;
+  line-height: 1;
+  transition: left 140ms ease, right 140ms ease, background 140ms ease;
+}
+.ellab-panel-button:hover {
+  background: var(--sl-color-gray-6);
+}
+.ellab-panel-button:focus-visible {
+  outline: 3px solid var(--sl-color-accent);
+  outline-offset: 2px;
+}
+.ellab-panel-button [data-ellab-chevron] {
+  font-family: system-ui, sans-serif;
+  font-size: 1.75rem;
+  transform: translateY(-0.08rem);
+}
+.ellab-panel-button--left {
+  left: calc(var(--sl-sidebar-width) - 2.85rem);
+}
+.ellab-panel-button--right {
+  right: calc(var(--sl-sidebar-width) - 2.85rem);
+}
+
+/* Not relevant on the splash home page or for mobile/tablet mobile-style layouts. */
+html:not([data-has-sidebar]) .ellab-panel-controls { display: none; }
+@media (max-width: 49.99rem) {
+  .ellab-panel-controls { display: none; }
+}
+
+@media (min-width: 50rem) {
+  html[data-ellab-left='closed'][data-has-sidebar] .sidebar-pane {
+    visibility: hidden !important;
+    pointer-events: none;
+  }
+  html[data-ellab-left='closed'][data-has-sidebar] .main-frame {
+    padding-inline-start: clamp(3rem, 5vw, 4.5rem) !important;
+  }
+  html[data-ellab-left='closed'] .ellab-panel-button--left {
+    left: 0.65rem;
+  }
+}
+
+/* Right TOC is a fixed desktop column only at Starlight's 72rem breakpoint. */
+@media (max-width: 71.99rem) {
+  .ellab-panel-button--right { display: none; }
+}
+@media (min-width: 72rem) {
+  html:not([data-has-toc]) .ellab-panel-button--right { display: none; }
+  html[data-ellab-right='closed'][data-has-toc] .right-sidebar-container {
+    display: none !important;
+  }
+  html[data-ellab-right='closed'][data-has-toc] .main-pane {
+    width: 100% !important;
+    max-width: none !important;
+    --sl-content-margin-inline: auto !important;
+  }
+  html[data-ellab-right='closed'] .ellab-panel-button--right {
+    right: 0.65rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ellab-panel-button { transition: none; }
+}
