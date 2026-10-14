@@ -9,18 +9,18 @@ import StarlightHeader from '@astrojs/starlight/components/Header.astro';
     type="button"
     class="ellab-panel-button ellab-panel-button--left"
     data-ellab-toggle="left"
-    aria-label="Скрыть меню уроков"
-    title="Скрыть меню уроков"
+    aria-label="Меню уроков"
+    title="Меню уроков"
     aria-controls="starlight__sidebar"
-    aria-pressed="false"
+    aria-expanded="true"
   ><span aria-hidden="true" data-ellab-chevron>‹</span></button>
   <button
     type="button"
     class="ellab-panel-button ellab-panel-button--right"
     data-ellab-toggle="right"
-    aria-label="Скрыть оглавление"
-    title="Скрыть оглавление"
-    aria-pressed="false"
+    aria-label="Оглавление"
+    title="Оглавление"
+    aria-expanded="true"
   ><span aria-hidden="true" data-ellab-chevron>›</span></button>
 </div>
 
@@ -55,11 +55,7 @@ import StarlightHeader from '@astrojs/starlight/components/Header.astro';
     if (panel === 'left') root.dataset.ellabLeft = state;
     else root.dataset.ellabRight = state;
 
-    const shownName = panel === 'left' ? 'меню уроков' : 'оглавление';
-    const label = (closed ? 'Показать ' : 'Скрыть ') + shownName;
-    button.setAttribute('aria-label', label);
-    button.setAttribute('title', label);
-    button.setAttribute('aria-pressed', String(closed));
+    button.setAttribute('aria-expanded', String(!closed));
 
     const icon = button.querySelector('[data-ellab-chevron]');
     if (icon) icon.textContent = panel === 'left' ? (closed ? '›' : '‹') : (closed ? '‹' : '›');
