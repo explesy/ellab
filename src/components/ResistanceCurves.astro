@@ -1,0 +1,89 @@
+<section class="not-content curve-lab" data-curve-lab aria-label="Графики I(R) и P(U) для омического резистора">
+  <h3>Два графика: I(R) и P(U)</h3>
+  <p>Слева — ток при выбранном напряжении как функция сопротивления. Справа — мощность при выбранном сопротивлении как функция напряжения.</p>
+  <div class="grid-input">
+    <label>U — напряжение <output data-u-text>12 В</output>
+      <input type="range" data-u min="6" max="24" value="12" step="6" />
+    </label>
+    <label>R — сопротивление <output data-r-text>12 Ом</output>
+      <input type="range" data-r min="6" max="48" value="12" step="6" />
+    </label>
+  </div>
+  <div class="plots">
+    <figure>
+      <svg viewBox="0 0 300 220" role="img" aria-label="График тока I в зависимости от сопротивления R при выбранном напряжении">
+        <path d="M40 15 V185 H290" stroke="currentColor" stroke-width="2" fill="none" />
+        <text x="8" y="22" font-size="12" fill="currentColor">I, А</text>
+        <text x="270" y="205" font-size="12" fill="currentColor">R, Ом</text>
+        <path data-i-curve d="" stroke="var(--sl-color-accent)" stroke-width="3" fill="none" />
+        <circle data-i-point r="6" fill="var(--sl-color-accent)" />
+      </svg>
+      <figcaption data-i-result aria-live="polite">I = 1,00 А</figcaption>
+    </figure>
+    <figure>
+      <svg viewBox="0 0 300 220" role="img" aria-label="График мощности P в зависимости от напряжения U при выбранном сопротивлении">
+        <path d="M40 15 V185 H290" stroke="currentColor" stroke-width="2" fill="none" />
+        <text x="8" y="22" font-size="12" fill="currentColor">P, Вт</text>
+        <text x="265" y="205" font-size="12" fill="currentColor">U, В</text>
+        <path data-p-curve d="" stroke="var(--sl-color-accent)" stroke-width="3" fill="none" />
+        <circle data-p-point r="6" fill="var(--sl-color-accent)" />
+      </svg>
+      <figcaption data-p-result aria-live="polite">P = 12,00 Вт</figcaption>
+    </figure>
+  </div>
+  <p class="hint">Модель идеального омического резистора: R и температура постоянны. Шкалы: I от 0 до 4 А, R от 6 до 48 Ом, P от 0 до 100 Вт, U от 0 до 24 В.</p>
+</section>
+<script>
+  import { ohmsLaw, resistorPower } from '../lib/electricity.mjs';
+  const X0 = 40, X1 = 290, Y0 = 185, Y1 = 15;
+  const fmt = (x) => x.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.querySelectorAll('[data-curve-lab]').forEach((lab) => {
+    const u = lab.querySelector('[data-u]');
+    const r = lab.querySelector('[data-r]');
+    if (!(u instanceof HTMLInputElement) || !(r instanceof HTMLInputElement)) return;
+    const path = (points) => points.map(([x, y], i) => (i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1)).join(' ');
+    const update = () => {
+      const voltage = Number(u.value);
+      const resistance = Number(r.value);
+      // I(R) at fixed U: R from 6 to 48 Ω, I from 0 to 4 A.
+      const iPoints = [];
+      for (let R = 6; R <= 48; R += 1) {
+        iPoints.push([X0 + ((R - 6) / 42) * (X1 - X0), Y0 - (ohmsLaw(voltage, R) / 4) * (Y0 - Y1)]);
+      }
+      // P(U) at fixed R: U from 0 to 24 V, P from 0 to 100 W.
+      const pPoints = [];
+      for (let U = 0; U <= 24; U += 1) {
+        pPoints.push([X0 + (U / 24) * (X1 - X0), Y0 - (resistorPower(U, resistance) / 100) * (Y0 - Y1)]);
+      }
+      const i = ohmsLaw(voltage, resistance);
+      const p = resistorPower(voltage, resistance);
+      const iX = X0 + ((resistance - 6) / 42) * (X1 - X0);
+      const iY = Y0 - (i / 4) * (Y0 - Y1);
+      const pX = X0 + (voltage / 24) * (X1 - X0);
+      const pY = Y0 - (p / 100) * (Y0 - Y1);
+      lab.querySelector('[data-i-curve]').setAttribute('d', path(iPoints));
+      lab.querySelector('[data-p-curve]').setAttribute('d', path(pPoints));
+      lab.querySelector('[data-i-point]').setAttribute('cx', iX.toFixed(1));
+      lab.querySelector('[data-i-point]').setAttribute('cy', iY.toFixed(1));
+      lab.querySelector('[data-p-point]').setAttribute('cx', pX.toFixed(1));
+      lab.querySelector('[data-p-point]').setAttribute('cy', pY.toFixed(1));
+      lab.querySelector('[data-u-text]').textContent = voltage + ' В';
+      lab.querySelector('[data-r-text]').textContent = resistance + ' Ом';
+      lab.querySelector('[data-i-result]').textContent = 'I = ' + voltage + ' В / ' + resistance + ' Ом = ' + fmt(i) + ' А';
+      lab.querySelector('[data-p-result]').textContent = 'P = U² / R = ' + fmt(p) + ' Вт при R = ' + resistance + ' Ом';
+    };
+    u.addEventListener('input', update);
+    r.addEventListener('input', update);
+    update();
+  });
+</script>
+<style>
+.curve-lab{background:var(--sl-color-bg-sidebar);border:1px solid var(--sl-color-hairline);border-radius:16px;padding:1.1rem;margin:1.25rem 0}
+h3{margin:0;font-size:1.13rem}p{font-size:.92rem;line-height:1.55;margin:.4rem 0 1rem}
+.grid-input{display:grid;gap:.9rem}label{display:grid;gap:.2rem;font-size:.92rem;font-weight:650}
+output{float:right;color:var(--sl-color-accent-high)}input{width:100%;accent-color:var(--sl-color-accent)}
+.plots{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
+figure{margin:0}svg{display:block;width:100%;height:auto}
+figcaption{font-size:.92rem;font-weight:650;margin-top:.4rem}
+.hint{font-size:.78rem;color:var(--sl-color-text);margin:.65rem 0 0}
+</style>
