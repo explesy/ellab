@@ -25,7 +25,7 @@ test('all FormulaCard expressions render as accessible KaTeX math', () => {
       count++;
     }
   }
-  assert.equal(count, 10);
+  assert.equal(count, 11);
 });
 
 test('the average-current formula has a stacked fraction and subscript', () => {

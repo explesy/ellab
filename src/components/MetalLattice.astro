@@ -1,0 +1,63 @@
+<figure class="not-content metal-lattice" aria-labelledby="metal-lattice-caption">
+  <svg viewBox="0 0 760 340" role="img" aria-labelledby="metal-lattice-title metal-lattice-desc">
+    <title id="metal-lattice-title">Упрощённая картина движения электронов внутри металла</title>
+    <desc id="metal-lattice-desc">Слева и справа ряды почти неподвижных положительных ионных остовов кристаллической решётки и подвижные отрицательные электроны между ними. Справа при наложении электрического поля электроны в среднем дрейфуют против направления поля. Сам материал остаётся на месте.</desc>
+    <defs>
+      <g id="ion">
+        <circle r="21" fill="var(--sl-color-accent-low)" stroke="var(--sl-color-accent)" stroke-width="1.8" />
+        <path d="M-6 0 H6 M0 -6 V6" stroke="var(--sl-color-accent-high)" stroke-width="2" stroke-linecap="round" />
+      </g>
+      <g id="electron">
+        <circle r="9" fill="#3f94d5" />
+        <path d="M-4 0 H4" stroke="#fff" stroke-width="2" stroke-linecap="round" />
+      </g>
+      <marker id="drift-arrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto">
+        <path d="M6 3 L0 0 L0 6 Z" fill="#3f94d5" />
+      </marker>
+      <marker id="field-arrow" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto">
+        <path d="M6 3 L0 0 L0 6 Z" fill="var(--sl-color-accent)" />
+      </marker>
+    </defs>
+    <rect x="12" y="10" width="360" height="302" rx="15" fill="var(--sl-color-bg)" stroke="var(--sl-color-hairline)" />
+    <rect x="388" y="10" width="360" height="302" rx="15" fill="var(--sl-color-bg)" stroke="var(--sl-color-hairline)" />
+    <g font-family="system-ui, sans-serif" font-size="18" text-anchor="middle" fill="currentColor">
+      <text x="192" y="42" font-weight="650">Без внешнего поля</text>
+      <text x="568" y="42" font-weight="650">С электрическим полем</text>
+    </g>
+    <g opacity="0.95">
+      <use href="#ion" x="83" y="111" /><use href="#ion" x="192" y="111" /><use href="#ion" x="301" y="111" />
+      <use href="#ion" x="83" y="183" /><use href="#ion" x="192" y="183" /><use href="#ion" x="301" y="183" />
+      <use href="#ion" x="83" y="255" /><use href="#ion" x="192" y="255" /><use href="#ion" x="301" y="255" />
+      <use href="#ion" x="459" y="111" /><use href="#ion" x="568" y="111" /><use href="#ion" x="677" y="111" />
+      <use href="#ion" x="459" y="183" /><use href="#ion" x="568" y="183" /><use href="#ion" x="677" y="183" />
+      <use href="#ion" x="459" y="255" /><use href="#ion" x="568" y="255" /><use href="#ion" x="677" y="255" />
+    </g>
+    <g>
+      <use href="#electron" x="127" y="141" /><use href="#electron" x="263" y="146" />
+      <use href="#electron" x="151" y="218" /><use href="#electron" x="242" y="229" />
+      <use href="#electron" x="100" y="291" /><use href="#electron" x="291" y="291" />
+      <use href="#electron" x="505" y="141" /><use href="#electron" x="641" y="146" />
+      <use href="#electron" x="529" y="218" /><use href="#electron" x="620" y="229" />
+      <use href="#electron" x="478" y="291" /><use href="#electron" x="669" y="291" />
+    </g>
+    <g fill="none" stroke="#3f94d5" stroke-width="2" stroke-linecap="round">
+      <path d="M134 131 L143 124 M258 131 L248 123 M158 228 L162 234 M241 213 L235 207" stroke-dasharray="3 5" />
+      <path d="M534 142 H492 M666 146 H624 M556 218 H513 M647 229 H603" marker-end="url(#drift-arrow)" />
+    </g>
+    <g stroke="var(--sl-color-accent)" fill="none" stroke-width="2.2" stroke-linecap="round">
+      <path d="M455 69 H694" marker-end="url(#field-arrow)" />
+    </g>
+    <g font-size="13" font-family="system-ui, sans-serif" fill="currentColor">
+      <text x="454" y="63">Электрическое поле →</text>
+      <text x="405" y="333">Дрейф электронов: влево, против поля</text>
+      <text x="22" y="333">Нет общего направления дрейфа</text>
+    </g>
+  </svg>
+  <figcaption id="metal-lattice-caption"><strong>Упрощённая модель металла, а не снимок атомов.</strong> Круги с плюсом обозначают положительные ионные остовы, с минусом — электроны проводимости. Слева нет преимущественного направления движения; справа поле даёт небольшой средний дрейф электронов против своего направления. На самом деле электроны движутся квантовомеханически, а решётка колеблется.</figcaption>
+</figure>
+<style>
+.metal-lattice{overflow-x:auto;background:var(--sl-color-bg-sidebar);border:1px solid var(--sl-color-hairline);border-radius:14px;padding:.8rem;margin:1.2rem 0}
+.metal-lattice svg{display:block;width:100%;min-width:600px;height:auto}
+.metal-lattice figcaption{font-size:.86rem;line-height:1.6;color:var(--sl-color-text);padding:.55rem .35rem .3rem}
+@media(max-width:36rem){.metal-lattice{padding:.5rem}.metal-lattice figcaption{font-size:.82rem}}
+</style>

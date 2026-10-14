@@ -4,7 +4,7 @@ import { join } from 'node:path';
 const expectedRoutes = [
   ['index.html', 'Эллаб'],
   ['lessons/00-introduction/index.html', 'невидимая сила'],
-  ['lessons/01-quantities/index.html', 'Почему одни и те же 12 вольт'],
+  ['lessons/01-quantities/index.html', 'Что происходит внутри провода'],
   ['lessons/01-quantities-audio/index.html', 'Урок второй'],
   ['lessons/02-ohms-law-audio/index.html', 'Куда девается электрическая энергия'],
   ['lessons/03-series-parallel-audio/index.html', 'Урок четвёртый'],
@@ -35,6 +35,9 @@ for (const [file, marker] of expectedRoutes) {
 const formulaPagePath = join(process.cwd(), 'dist', 'lessons/01-quantities/index.html');
 if (existsSync(formulaPagePath)) {
   const formulaPage = readFileSync(formulaPagePath, 'utf8');
+  if (!formulaPage.includes('metal-lattice-caption') || !formulaPage.includes('Расшифруем каждую букву')) {
+    problems.push('Metal lattice explanation and readable Ohm law breakdown missing from lesson 2');
+  }
   if (!formulaPage.includes('katex-mathml') || !formulaPage.includes('<mfrac>')) {
     problems.push('KaTeX/MathML stacked fraction missing from lesson 2');
   }
