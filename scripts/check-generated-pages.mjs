@@ -5,10 +5,6 @@ const expectedRoutes = [
   ['index.html', 'Эллаб'],
   ['lessons/00-introduction/index.html', 'невидимая сила'],
   ['lessons/01-quantities/index.html', 'Что происходит внутри провода'],
-  ['lessons/01-quantities-audio/index.html', 'Урок второй'],
-  ['lessons/02-ohms-law-audio/index.html', 'Куда девается электрическая энергия'],
-  ['lessons/03-series-parallel-audio/index.html', 'Урок четвёртый'],
-  ['lessons/04-alternating-current-audio/index.html', 'Урок пятый'],
   ['lessons/02-ohms-law/index.html', 'Мощность'],
   ['lessons/03-series-parallel/index.html', 'Параллельно'],
   ['lessons/03-alternating-current/index.html', 'материал перемещён'],
@@ -20,6 +16,12 @@ const expectedRoutes = [
 ];
 
 const problems = [];
+const retiredPages = ['01-quantities-audio', '02-ohms-law-audio', '03-series-parallel-audio', '04-alternating-current-audio'];
+for (const slug of retiredPages) {
+  const obsoletePage = join(process.cwd(), 'dist', 'lessons', slug, 'index.html');
+  if (existsSync(obsoletePage)) problems.push('Retired page should not be generated: ' + slug);
+}
+
 for (const [file, marker] of expectedRoutes) {
   const absolute = join(process.cwd(), 'dist', file);
   if (!existsSync(absolute)) {
@@ -29,6 +31,7 @@ for (const [file, marker] of expectedRoutes) {
   const contents = readFileSync(absolute, 'utf8');
   if (!contents.toLocaleLowerCase('ru-RU').includes(marker.toLocaleLowerCase('ru-RU'))) problems.push('Expected content missing in ' + file + ': ' + marker);
   if (!contents.includes('/ellab/')) problems.push('Site base /ellab/ missing in ' + file);
+  if (contents.includes('-audio/')) problems.push('Obsolete companion link in ' + file);
 }
 
 // KaTeX is pre-rendered into the actual lesson HTML, including a stacked fraction.
