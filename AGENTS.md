@@ -99,6 +99,7 @@ node scripts/check-generated-pages.mjs   # проверка собранного
 
 1. `npm test`, `npm run build`, `node scripts/check-generated-pages.mjs` — зелёные.
 2. Если меняется список уроков или их адреса — обновить `astro.config.mjs`, `scripts/check-generated-pages.mjs` и карту в этом файле.
+3. Все внутренние ссылки между уроками и справочниками проверены.
 4. В `notes/lesson-changelog.md` добавлена запись о содержательных изменениях.
 5. В ответе пользователю: какие файлы изменены и что не проверено (например, визуальная проверка в браузере).
 
