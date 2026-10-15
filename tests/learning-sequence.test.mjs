@@ -35,3 +35,47 @@ test('Ohm law and current formulas explain each quantity with units', () => {
   assert.match(lesson, /1\\,\\text{В}=1\\,\\text{А}\\cdot1\\,\\Omega/);
   assert.match(lesson, /омического элемента/);
 });
+
+const readLesson = slug => readFileSync(new URL('../src/content/docs/lessons/' + slug + '.mdx', import.meta.url), 'utf8');
+
+test('lesson 3 keeps its worked problem within familiar DC concepts', () => {
+  const lesson3 = readLesson('02-ohms-law');
+  assert.match(lesson3, /низковольтный нагревательный элемент/);
+  assert.match(lesson3, /144/);
+  assert.doesNotMatch(lesson3, /водонагреватель — чисто активная нагрузка|230 В и потребляет 2,2 кВт/);
+});
+
+test('lesson 4 derives rather than memorizes both connection rules', () => {
+  const connections = readLesson('03-series-parallel');
+  const steps = [
+    '## 1. Сначала представим',
+    '## 2. Последовательно',
+    '## 3. Параллельно',
+    '### Почему параллельное сопротивление становится меньше?',
+    '## 4. Посмотри на схему',
+    '## 5. Почему законы Кирхгофа',
+  ].map(phrase => connections.indexOf(phrase));
+  assert.ok(steps.every(x => x >= 0), 'Missing conceptual step');
+  assert.ok(steps.every((x, i) => i === 0 || x > steps[i - 1]), 'Rules must follow their physical explanation');
+  assert.match(connections, /Электроны \*\*не расходуются\*\*/);
+  assert.ok(connections.includes(String.raw`I_{\text{ист}}=I_1+I_2`));
+});
+
+test('lesson 5 explains magnet and coil before sine waves and does not require RMS', () => {
+  const induction = readLesson('04-alternating-current');
+  const steps = ['## 1. Что магнит', '## 2. Из одного', '<GeneratorCycle />', '## 5. Почему получается синусоида', '## 6. Частота'];
+  const positions = steps.map(x => induction.indexOf(x));
+  assert.ok(positions.every(x => x >= 0));
+  assert.ok(positions.every((x, i) => i === 0 || x > positions[i - 1]));
+  assert.doesNotMatch(induction, /U_\\{\\text\\{действ\\}\\}|<ACWaveLab \/>/);
+  assert.match(induction, /электроны проводимости/);
+});
+
+test('lesson 6 introduces RMS through resistive heating before 230 V', () => {
+  const rms = readLesson('05-ac-rms');
+  const steps = ['## 1. Начнём с резистора', '## 2. Почему при отрицательном', '## 3. Идея действующего', '## 4. Где здесь бытовые 230 В', '<ACWaveLab />'];
+  const positions = steps.map(x => rms.indexOf(x));
+  assert.ok(positions.every(x => x >= 0));
+  assert.ok(positions.every((x, i) => i === 0 || x > positions[i - 1]));
+  assert.match(rms, /не всегда даёт активную мощность/);
+});

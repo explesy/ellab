@@ -8,7 +8,8 @@ const expectedRoutes = [
   ['lessons/02-ohms-law/index.html', 'Мощность'],
   ['lessons/03-series-parallel/index.html', 'Параллельно'],
   ['lessons/03-alternating-current/index.html', 'материал перемещён'],
-  ['lessons/04-alternating-current/index.html', 'синусоида'],
+  ['lessons/04-alternating-current/index.html', 'магнитное поле'],
+  ['lessons/05-ac-rms/index.html', 'действующее'],
   ['practice/01-virtual-circuit/index.html', 'цепь'],
   ['reference/glossary/index.html', 'Deutsch'],
   ['reference/roadmap/index.html', 'Карта обучения'],
@@ -47,13 +48,23 @@ if (existsSync(formulaPagePath)) {
 }
 
 // Formulas in paragraphs must be pre-rendered rather than displayed as code.
-for (const slug of ['01-quantities', '02-ohms-law', '03-series-parallel', '04-alternating-current']) {
+for (const slug of ['01-quantities', '02-ohms-law', '03-series-parallel', '04-alternating-current', '05-ac-rms']) {
   const pagePath = join(process.cwd(), 'dist', 'lessons', slug, 'index.html');
   if (!existsSync(pagePath)) continue; // the route checker reports missing files
   const page = readFileSync(pagePath, 'utf8');
   if (!page.includes('ellab-inline-math') || !page.includes('katex-mathml')) {
     problems.push('Inline KaTeX/MathML missing from lesson ' + slug);
   }
+}
+
+// The new generator and RMS labs should be present on their intended lesson pages.
+const generatorPage = join(process.cwd(), 'dist', 'lessons/04-alternating-current/index.html');
+const rmsPage = join(process.cwd(), 'dist', 'lessons/05-ac-rms/index.html');
+if (existsSync(generatorPage) && !readFileSync(generatorPage, 'utf8').includes('data-generator-lab')) {
+  problems.push('Generator interaction missing from lesson 5');
+}
+if (existsSync(rmsPage) && !readFileSync(rmsPage, 'utf8').includes('data-ac-lab')) {
+  problems.push('RMS oscilloscope missing from lesson 6');
 }
 
 // The rendered sidebar must follow the order declared in astro.config.mjs.

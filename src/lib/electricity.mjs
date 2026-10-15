@@ -37,3 +37,15 @@ export function twoResistorCircuit(voltage, resistance, connection = 'series') {
     eachCurrent: series ? sourceCurrent : voltage / resistance,
   };
 }
+
+
+/** One electrical cycle of an ideal single-pole-pair generator. θ=0 at maximum flux. */
+export function generatorCycle(angleDegrees) {
+  if (!Number.isFinite(angleDegrees)) throw new RangeError('Angle must be finite');
+  const theta = angleDegrees * Math.PI / 180;
+  const clean = x => Math.abs(x) < 1e-12 ? 0 : x;
+  return {
+    fluxFraction: clean(Math.cos(theta)),
+    emfFraction: clean(Math.sin(theta)),
+  };
+}

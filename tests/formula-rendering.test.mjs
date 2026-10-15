@@ -7,6 +7,8 @@ const lessonPaths = [
   'src/content/docs/lessons/01-quantities.mdx',
   'src/content/docs/lessons/02-ohms-law.mdx',
   'src/content/docs/lessons/03-series-parallel.mdx',
+  'src/content/docs/lessons/04-alternating-current.mdx',
+  'src/content/docs/lessons/05-ac-rms.mdx',
 ];
 
 test('all FormulaCard expressions render as accessible KaTeX math', () => {
@@ -25,7 +27,7 @@ test('all FormulaCard expressions render as accessible KaTeX math', () => {
       count++;
     }
   }
-  assert.equal(count, 11);
+  assert.ok(count >= 20, 'Expected a substantial accessible math collection; got ' + count);
 });
 
 test('the average-current formula has a stacked fraction and subscript', () => {

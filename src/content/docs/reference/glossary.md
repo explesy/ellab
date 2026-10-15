@@ -49,5 +49,12 @@ description: 'Термины для чтения документации в Г�
 | эквивалентное сопротивление | der Ersatzwiderstand | la resistencia equivalente |
 | трансформатор | der Transformator | el transformador |
 | генератор | der Generator | el generador |
+| переменное напряжение | die Wechselspannung | la tensión alterna |
+| катушка | die Spule | la bobina |
+| магнитное поле | das Magnetfeld | el campo magnético |
+| магнитный поток | der magnetische Fluss | el flujo magnético |
+| электромагнитная индукция | die elektromagnetische Induktion | la inducción electromagnética |
+| мгновенное значение | der Momentanwert | el valor instantáneo |
+| средняя мощность | die mittlere Leistung | la potencia media |
 
 **Замечание:** профессиональные названия устройств могут зависеть от контекста и нормативной системы. Например, слова Sicherung и fusible иногда имеют разные узкие значения.

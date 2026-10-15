@@ -24,7 +24,7 @@ npm run build
 - src/content/docs/lessons/ — основной текст уроков, примеры, формулы и упражнения.
 - src/content/docs/practice/ — безопасные симуляции и учебные эксперименты.
 - src/content/docs/reference/ — справочник, карта обучения, профессии.
-- src/components/ — интерактивные лаборатории: закон Ома, график I(U), схема цепи и график AC. Формулы в карточках (`FormulaCard`) и внутри абзацев (`InlineMath`) рендерятся через KaTeX в HTML + MathML во время сборки.
+- src/components/ — интерактивные лаборатории: закон Ома, график I(U), схема цепи, модель генератора с поворотом катушки и график AC/RMS. Формулы в карточках (`FormulaCard`) и внутри абзацев (`InlineMath`) рендерятся через KaTeX в HTML + MathML во время сборки.
 - src/lib/electricity.mjs — чистые функции для моделей и тестов.
 - tests/ — тесты формул.
 - notes/teaching-guidelines.md — правила создания и улучшения уроков.

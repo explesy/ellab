@@ -1,0 +1,102 @@
+<section class="not-content generator-lab" data-generator-lab aria-label="Как изменяется напряжение генератора за оборот">
+  <h3>Один оборот катушки — один цикл напряжения</h3>
+  <p>Модель идеального генератора с одной парой магнитных полюсов. Поверни катушку: сравни положение её оси и мгновенное напряжение на графике.</p>
+  <label for="generator-angle">Угол поворота <output data-angle>90°</output></label>
+  <input id="generator-angle" data-phase type="range" min="0" max="360" step="15" value="90" />
+  <div class="picture">
+    <svg viewBox="0 0 660 280" role="img" aria-label="Слева магнитные полюса и схематическая нормаль к витку; справа синусоида за полный оборот">
+      <defs>
+        <marker id="generator-field-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0 0 L7 3.5 L0 7 Z" fill="var(--sl-color-accent-high)" />
+        </marker>
+      </defs>
+      <g font-size="15" fill="currentColor">
+        <text x="28" y="30">Магнитное поле</text>
+        <text x="355" y="30">Напряжение за один оборот</text>
+      </g>
+      <rect x="22" y="85" width="43" height="94" rx="7" fill="var(--sl-color-accent-low)" stroke="var(--sl-color-accent)" />
+      <rect x="285" y="85" width="43" height="94" rx="7" fill="var(--sl-color-accent-low)" stroke="var(--sl-color-accent)" />
+      <g font-size="25" font-weight="700" fill="var(--sl-color-accent-high)"><text x="33" y="139">N</text><text x="298" y="139">S</text></g>
+      <g fill="none" stroke="var(--sl-color-accent-high)" stroke-width="1.8" opacity=".7" marker-end="url(#generator-field-arrow)">
+        <path d="M74 105 H277" /><path d="M74 160 H277" />
+      </g>
+      <circle cx="175" cy="132" r="64" fill="none" stroke="currentColor" opacity=".19" stroke-dasharray="4 5" />
+      <circle cx="175" cy="132" r="4" fill="currentColor" />
+      <g data-normal transform="rotate(90 175 132)">
+        <path d="M175 132 H239" stroke="var(--sl-color-accent-high)" stroke-width="4" stroke-linecap="round" />
+        <path d="M239 132 l-12 -7 v14 Z" fill="var(--sl-color-accent-high)" />
+      </g>
+      <text x="34" y="214" font-size="13" fill="currentColor">Стрелка — нормаль к витку,</text>
+      <text x="34" y="232" font-size="13" fill="currentColor">а не путь электронов</text>
+      <g stroke="currentColor" opacity=".3" stroke-width="1.5">
+        <path d="M362 132 H630 M362 55 V209" />
+        <path d="M429 55 V209 M496 55 V209 M563 55 V209 M630 55 V209" stroke-dasharray="3 6" />
+      </g>
+      <path data-wave d="" fill="none" stroke="var(--sl-color-accent)" stroke-width="3" stroke-linecap="round" />
+      <path data-cursor d="M429 55 V209" stroke="currentColor" opacity=".65" stroke-dasharray="4 4" />
+      <circle data-dot cx="429" cy="68" r="6" fill="var(--sl-color-accent-high)" stroke="var(--sl-color-bg)" stroke-width="2" />
+      <g font-size="12" fill="currentColor">
+        <text x="342" y="62">+</text><text x="342" y="135">0</text><text x="342" y="205">−</text>
+        <text x="359" y="230">0°</text><text x="416" y="230">90°</text>
+        <text x="478" y="230">180°</text><text x="548" y="230">270°</text><text x="604" y="230">360°</text>
+      </g>
+    </svg>
+  </div>
+  <div class="results" aria-live="polite">
+    <p><strong data-state>Положительный максимум напряжения.</strong></p>
+    <p data-reason>Поток через виток меняется быстрее всего; выбранная полярность положительна.</p>
+  </div>
+  <p class="note">График показывает ЭДС с произвольной вертикальной шкалой, а не безопасное напряжение или реальную конструкцию генератора. При смене направления вращения полярность в соответствующих положениях поменяется.</p>
+</section>
+<script>
+  import { generatorCycle } from '../lib/electricity.mjs';
+  document.querySelectorAll('[data-generator-lab]').forEach(lab => {
+    const input = lab.querySelector('[data-phase]');
+    if (!(input instanceof HTMLInputElement)) return;
+    const path = lab.querySelector('[data-wave]');
+    if (!(path instanceof SVGPathElement)) return;
+    const points = [];
+    for (let angle = 0; angle <= 360; angle += 2) {
+      const x = 362 + 268 * angle / 360;
+      const y = 132 - 64 * Math.sin(Math.PI * angle / 180);
+      points.push((angle === 0 ? 'M' : 'L') + x.toFixed(2) + ',' + y.toFixed(2));
+    }
+    path.setAttribute('d', points.join(' '));
+    const update = () => {
+      const angle = Number(input.value);
+      const { fluxFraction, emfFraction } = generatorCycle(angle);
+      const x = 362 + 268 * angle / 360;
+      const y = 132 - 64 * emfFraction;
+      lab.querySelector('[data-angle]').textContent = angle + '°';
+      lab.querySelector('[data-normal]').setAttribute('transform', 'rotate(' + angle + ' 175 132)');
+      lab.querySelector('[data-cursor]').setAttribute('d', 'M' + x.toFixed(2) + ' 55 V209');
+      lab.querySelector('[data-dot]').setAttribute('cx', x.toFixed(2));
+      lab.querySelector('[data-dot]').setAttribute('cy', y.toFixed(2));
+      const state = Math.abs(emfFraction) < 0.02 ? 'Мгновенное напряжение равно нулю.'
+        : Math.abs(emfFraction - 1) < 0.02 ? 'Положительный максимум напряжения.'
+        : Math.abs(emfFraction + 1) < 0.02 ? 'Отрицательный максимум напряжения.'
+        : emfFraction > 0 ? 'Положительная полуволна.' : 'Отрицательная полуволна.';
+      const reason = Math.abs(fluxFraction) > .98
+        ? 'Магнитный поток сейчас близок к максимуму или минимуму, зато скорость его изменения близка к нулю.'
+        : Math.abs(fluxFraction) < .02
+          ? 'Магнитный поток сейчас близок к нулю, зато скорость его изменения максимальна.'
+          : 'Магнитный поток изменяется: поэтому в витке возникает ЭДС.';
+      lab.querySelector('[data-state]').textContent = state;
+      lab.querySelector('[data-reason]').textContent = reason;
+    };
+    input.addEventListener('input', update);
+    update();
+  });
+</script>
+<style>
+.generator-lab{border:1px solid var(--sl-color-hairline);border-radius:16px;padding:1.25rem;background:var(--sl-color-bg-sidebar);margin:1.35rem 0}
+h3{font-size:1.18rem;margin:0 0 .6rem}
+p{margin:.35rem 0 .8rem}
+label{display:flex;justify-content:space-between;font-weight:650;gap:1rem}
+output{color:var(--sl-color-accent-high);font-variant-numeric:tabular-nums}
+input{width:100%;accent-color:var(--sl-color-accent);margin:.7rem 0}
+svg{display:block;width:100%;height:auto;max-height:300px}
+.results{background:var(--sl-color-bg);border-radius:12px;padding:.75rem 1rem}
+.results p{margin:.1rem 0 .4rem}
+.note{font-size:.78rem;color:var(--sl-color-text);margin-top:.8rem}
+</style>

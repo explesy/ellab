@@ -21,7 +21,8 @@ export default defineConfig({
             { slug: 'lessons/01-quantities', label: '02 · Ток, напряжение, сопротивление' },
             { slug: 'lessons/02-ohms-law', label: '03 · Мощность и энергия' },
             { slug: 'lessons/03-series-parallel', label: '04 · Соединение нагрузок' },
-            { slug: 'lessons/04-alternating-current', label: '05 · Переменный ток' },
+            { slug: 'lessons/04-alternating-current', label: '05 · Генератор и переменный ток' },
+            { slug: 'lessons/05-ac-rms', label: '06 · Действующее напряжение' },
           ],
         },
         {

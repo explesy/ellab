@@ -8,6 +8,7 @@ const lessons = [
   '02-ohms-law.mdx',
   '03-series-parallel.mdx',
   '04-alternating-current.mdx',
+  '05-ac-rms.mdx',
 ];
 
 test('all inline lesson formulas compile to accessible KaTeX MathML', () => {
