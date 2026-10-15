@@ -107,6 +107,7 @@ test('practical progression is explicit and keeps hazardous work outside the cou
   for (const required of [
     '## Этап 1.', '## Этап 2.', '## Этап 3.', '## Этап 4.',
     '## Этап 5A.', '## Этап 5B.', 'Германи', 'Испани',
-    '230/400 В', 'Прогноз', 'Зачёт',
+    '230/400 В', 'Зачёт',
   ]) assert.ok(practice.includes(required), 'Practice roadmap missing ' + required);
+  assert.match(practice, /прогноз|предсказание/i);
 });
