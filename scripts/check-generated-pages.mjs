@@ -10,6 +10,7 @@ const expectedRoutes = [
   ['lessons/03-alternating-current/index.html', 'материал перемещён'],
   ['lessons/04-alternating-current/index.html', 'магнитное поле'],
   ['lessons/05-ac-rms/index.html', 'действующее'],
+  ['practice/index.html', 'Практический маршрут'],
   ['practice/01-virtual-circuit/index.html', 'цепь'],
   ['reference/glossary/index.html', 'Deutsch'],
   ['reference/roadmap/index.html', 'Карта обучения'],
@@ -33,6 +34,17 @@ for (const [file, marker] of expectedRoutes) {
   if (!contents.toLocaleLowerCase('ru-RU').includes(marker.toLocaleLowerCase('ru-RU'))) problems.push('Expected content missing in ' + file + ': ' + marker);
   if (!contents.includes('/ellab/')) problems.push('Site base /ellab/ missing in ' + file);
   if (contents.includes('-audio/')) problems.push('Obsolete companion link in ' + file);
+}
+
+// Starlight injects a single page H1 from frontmatter; Markdown must not duplicate it.
+for (const [file] of expectedRoutes.filter(([path]) => path !== 'index.html')) {
+  const pagePath = join(process.cwd(), 'dist', file);
+  if (!existsSync(pagePath)) continue;
+  const html = readFileSync(pagePath, 'utf8');
+  const headings = [...html.matchAll(/<h1(?:\s[^>]*)?>/g)];
+  if (headings.length !== 1) {
+    problems.push('Expected exactly one H1 in ' + file + ', found ' + headings.length);
+  }
 }
 
 // KaTeX is pre-rendered into the actual lesson HTML, including a stacked fraction.

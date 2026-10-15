@@ -1,9 +1,7 @@
 ---
-title: '01 · Первая виртуальная цепь'
+title: 'Собери цепь, которую можешь объяснить'
 description: 'Источник, выключатель, лампа: безопасный практикум без сетевого напряжения.'
 ---
-
-# Собери цепь, которую можешь объяснить
 
 Открой [PhET Circuit Construction Kit — DC Virtual Lab](https://phet.colorado.edu/en/simulations/circuit-construction-kit-dc-virtual-lab/about?locale=en).
 

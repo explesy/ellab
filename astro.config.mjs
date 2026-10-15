@@ -28,6 +28,7 @@ export default defineConfig({
         {
           label: 'Практика',
           items: [
+            { slug: 'practice', label: 'Практический маршрут' },
             { slug: 'practice/01-virtual-circuit', label: 'Виртуальная цепь' },
           ],
         },

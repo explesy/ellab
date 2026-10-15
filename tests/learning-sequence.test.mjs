@@ -7,7 +7,7 @@ const lesson = readFileSync(
   'utf8',
 );
 test('lesson starts with an understandable observation rather than unknown calculations', () => {
-  const lead = lesson.slice(lesson.indexOf('# Урок 2.'), lesson.indexOf('## 1.'));
+  const lead = lesson.slice(lesson.indexOf('*Рекомендуемое время'), lesson.indexOf('## 1.'));
   assert.match(lead, /ламп/);
   assert.doesNotMatch(lead, /24\s?(?:Ω|Ом)|48\s?(?:Ω|Ом)|0[,.]5\s?А/);
 });
@@ -78,4 +78,35 @@ test('lesson 6 introduces RMS through resistive heating before 230 V', () => {
   assert.ok(positions.every(x => x >= 0));
   assert.ok(positions.every((x, i) => i === 0 || x > positions[i - 1]));
   assert.match(rms, /не всегда даёт активную мощность/);
+});
+
+test('Starlight pages use frontmatter title, not a duplicated Markdown H1', () => {
+  const paths = [
+    'src/content/docs/lessons/00-introduction.md',
+    'src/content/docs/lessons/01-quantities.mdx',
+    'src/content/docs/lessons/02-ohms-law.mdx',
+    'src/content/docs/lessons/03-series-parallel.mdx',
+    'src/content/docs/lessons/04-alternating-current.mdx',
+    'src/content/docs/lessons/05-ac-rms.mdx',
+    'src/content/docs/lessons/03-alternating-current.mdx',
+    'src/content/docs/practice/index.md',
+    'src/content/docs/practice/01-virtual-circuit.md',
+    'src/content/docs/reference/roadmap.md',
+    'src/content/docs/reference/profession.md',
+    'src/content/docs/reference/glossary.md',
+  ];
+  for (const path of paths) {
+    const source = readFileSync(new URL('../' + path, import.meta.url), 'utf8');
+    assert.match(source, /^---\n(?:.|\n)*?^title:/m, 'Missing page title: ' + path);
+    assert.doesNotMatch(source, /^#\s+\S/m, 'Second top-level heading in ' + path);
+  }
+});
+
+test('practical progression is explicit and keeps hazardous work outside the course', () => {
+  const practice = readFileSync(new URL('../src/content/docs/practice/index.md', import.meta.url), 'utf8');
+  for (const required of [
+    '## Этап 1.', '## Этап 2.', '## Этап 3.', '## Этап 4.',
+    '## Этап 5A.', '## Этап 5B.', 'Германи', 'Испани',
+    '230/400 В', 'Прогноз', 'Зачёт',
+  ]) assert.ok(practice.includes(required), 'Practice roadmap missing ' + required);
 });
